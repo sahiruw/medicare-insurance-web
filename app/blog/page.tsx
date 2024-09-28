@@ -9,39 +9,41 @@ import { faSearch } from "@fortawesome/free-solid-svg-icons";
 
 export default function BlogPage() {
   const [selectedTag, setSelectedTag] = useState("All");
+  const [blogs, setBlogs] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [tags, setTags] = useState(["All", "Latest"]); // Initialize with "All"
 
-  const blogs = [
-    {
-      image:
-        "https://static.toiimg.com/thumb/width-600,height-400,msid-45454098.cms",
-      title: "How to collaborate makes us better designers",
-      date: "18 Jan 2024",
-      content:
-        "Collaboration can make our teams stronger and our individual designs better.",
-      author: "Brooklyn Simmons",
-      tags: ["AI", "Doctor"],
-    },
-    {
-      image:
-        "https://static.toiimg.com/thumb/width-600,height-400,msid-45454098.cms",
-      title: "AI is changing the insurance landscape",
-      date: "22 Jan 2024",
-      content:
-        "Artificial intelligence is transforming how insurance companies operate.",
-      author: "Dianne Russell",
-      tags: ["Insurance", "AI"],
-    },
-    {
-      image:
-        "https://static.toiimg.com/thumb/width-600,height-400,msid-45454098.cms",
-      title: "Understanding the basics of health insurance",
-      date: "25 Jan 2024",
-      content: "Health insurance helps cover the cost of medical expenses.",
-      author: "Robert Fox",
-      tags: ["Insurance", "Doctor"],
-    },
-    // Add more blogs here...
-  ];
+  const router = useRouter(); // Use the router from next/navigation
+
+  // Function to extract unique tags from blog posts
+  const extractTags = (posts) => {
+    if (!posts || !Array.isArray(posts)) return ["All", "Latest"]; // Ensure posts is an array
+    const allTags = posts.flatMap((post) => post.tags || []); // Safely access tags
+    const uniqueTags = ["All", "Latest", ...new Set(allTags)]; // Always include "All" and "Latest"
+    return uniqueTags;
+  };
+
+  // Fetch blogs from your API
+  const fetchBlogs = async (page) => {
+    const response = await fetch(
+      `http://192.168.43.84:8000/blogs?page=${page}&page_size=6`
+    );
+    const data = await response.json();
+    setBlogs(data.posts);
+    setTotalPages(data.total_pages);
+    setCurrentPage(data.current_page);
+
+    // Extract tags from the fetched posts and set the tags state
+    const uniqueTags = extractTags(data.posts);
+    setTags(uniqueTags);
+  };
+
+  // Fetch blogs on initial render and when the page changes
+  useEffect(() => {
+    fetchBlogs(currentPage);
+  }, [currentPage]);
 
   // Function to filter blogs by tags
   const filteredBlogs = blogs.filter((blog) => {

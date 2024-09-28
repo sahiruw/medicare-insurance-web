@@ -19,13 +19,13 @@ export default function HeroSection() {
       <section
         className="bg-primaryBlack text-white rounded-lg p-8 w-full max-w-6xl mx-auto"
         style={{
-          backgroundImage: 'url("/assets/Vector.svg")', // Correct vector path
-          backgroundSize: "cover", // Adjust size based on your requirements
+          backgroundImage: 'url("/assets/Vector.svg")', 
+          backgroundSize: "cover", 
           backgroundPosition: "center", // Center the background image
           backgroundRepeat: "no-repeat", // Ensure it doesn't repeat
         }}
       >
-        <div className="flex flex-col items-center md:flex-row">
+        <div className="flex flex-col items-center md:flex-row w-full">
           {/* For mobile, the image appears at the top */}
           <div className="md:hidden mb-4 flex items-center">
             <img
@@ -70,7 +70,7 @@ export default function HeroSection() {
             <img
               alt="Placeholder image representing insurance information"
               className="rounded-lg h-40 md:h-48 w-full"
-              src="/assets/placeholder-image.jpg" // Correct placeholder image path
+              src="/assets/placeholder-image.jpg"
               width="400"
               height="200"
             />
