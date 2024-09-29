@@ -13,7 +13,7 @@ export default function BlogPage() {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [searchQuery, setSearchQuery] = useState("");
-  const [tags, setTags] = useState(["All", "Latest"]); // Initialize with "All"
+  const tags = ["All", "Latest", "AI", "Insurance", "Doctor"]; // Removed duplicate 'All'
 
   const router = useRouter(); // Use the router from next/navigation
 
@@ -51,7 +51,6 @@ export default function BlogPage() {
     return blog.tags.includes(selectedTag);
   });
 
-  const tags = ["All", "Latest", "AI", "Insurance", "Doctor"]; // Removed duplicate 'All'
 
   return (
     <>
