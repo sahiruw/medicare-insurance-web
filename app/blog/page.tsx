@@ -1,6 +1,6 @@
 "use client"; // Ensure this is a client-side component
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, Suspense } from "react";
 import { useRouter } from "next/navigation"; // Use useRouter from next/navigation
 import Navbar from "../../components/Navbar";
 import BlogCard from "../../components/BlogCard";
@@ -8,6 +8,29 @@ import PaginationComponent from "../../components/Pagination";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSearch } from "@fortawesome/free-solid-svg-icons";
 import TawkMessengerReact from "@/components/TawkMessengerReact";
+
+function BlogList({ blogs, handleBlogClick, filteredBlogs }) {
+  return (
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+      {filteredBlogs.map((blog, index) => (
+        <div
+          key={index}
+          onClick={() => handleBlogClick(blog)} // Handle the click event
+        >
+          <BlogCard
+            image_url={blog.image_url}
+            title={blog.title}
+            date={blog.date}
+            subtitle={blog.subtitle}
+            author={blog.author}
+            tags={blog.tags}
+            id={blog.id} // Pass the blog ID
+          />
+        </div>
+      ))}
+    </div>
+  );
+}
 
 export default function BlogPage() {
   const [selectedTag, setSelectedTag] = useState("All");
@@ -17,9 +40,8 @@ export default function BlogPage() {
   const [searchQuery, setSearchQuery] = useState("");
   const [tags, setTags] = useState(["All", "Latest"]); // Initialize with "All"
 
-  const router = useRouter(); // Use the router from next/navigation
+  const router = useRouter();
 
-  // Function to extract unique tags from blog posts
   const extractTags = (posts) => {
     if (!posts || !Array.isArray(posts)) return ["All", "Latest"]; // Ensure posts is an array
     const allTags = posts.flatMap((post) => post.tags || []); // Safely access tags
@@ -99,25 +121,14 @@ export default function BlogPage() {
           </div>
         </div>
 
-        {/* Blog Cards */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {filteredBlogs.map((blog, index) => (
-            <div
-              key={index}
-              onClick={() => handleBlogClick(blog)} // Handle the click event
-            >
-              <BlogCard
-                image_url={blog.image_url}
-                title={blog.title}
-                date={blog.date}
-                subtitle={blog.subtitle}
-                author={blog.author}
-                tags={blog.tags}
-                id={blog.id} // Pass the blog ID
-              />
-            </div>
-          ))}
-        </div>
+        {/* Suspense for loading the blog list */}
+        <Suspense fallback={<div>Loading blogs...</div>}>
+          <BlogList
+            blogs={blogs}
+            handleBlogClick={handleBlogClick}
+            filteredBlogs={filteredBlogs}
+          />
+        </Suspense>
 
         {/* Pagination */}
         {totalPages > 1 && (

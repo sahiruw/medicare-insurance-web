@@ -2,11 +2,11 @@
 import React, { useEffect, useState } from "react";
 import AdminSideBar from "../../../components/AdminSideBar";
 import { v4 as uuidv4 } from "uuid";
-import { useSearchParams } from 'next/navigation'
+import { useSearchParams } from "next/navigation";
 
 const FAQEditorPage = () => {
-  const searchParams = useSearchParams()
-  const id = searchParams.get('id')
+  const searchParams = useSearchParams();
+  const id = searchParams.get("id");
 
   const [faqID, setFaqID] = useState("");
   const [faqTitle, setFaqTitle] = useState("");
@@ -28,7 +28,9 @@ const FAQEditorPage = () => {
     setStatusMessage("");
 
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_FASTAPI_URL}/faq/${id}`);
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_FASTAPI_URL}/faq/${id}`
+      );
       if (response.ok) {
         const data = await response.json();
         setFaqTitle(data.faq.title);
@@ -72,10 +74,13 @@ const FAQEditorPage = () => {
     }
 
     try {
-      const response = await fetch("http://localhost:8000/add-faq", {
-        method: "POST",
-        body: formData, // Send FormData instead of JSON
-      });
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_FASTAPI_URL}/add-faq`,
+        {
+          method: "POST",
+          body: formData, // Send FormData instead of JSON
+        }
+      );
 
       if (response.ok) {
         const data = await response.json();
